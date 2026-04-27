@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Sedes - Óptica</title>
+  <style>
+    body { font-family: Arial; background:#f4f6f8; margin:0; }
+    header { background:#1f2937; color:#fff; padding:15px; text-align:center; }
+    table { width:100%; border-collapse: collapse; margin-top:20px; }
+    th, td { padding:10px; border-bottom:1px solid #ddd; text-align:left; }
+    th { background:#111827; color:#fff; }
+    select, input { padding:5px; }
+    .ok { background:#d1fae5; }
+    .warn { background:#fef3c7; }
+    .bad { background:#fee2e2; }
+    .container { padding:20px; }
+    .top { display:flex; justify-content:space-between; }
+    .card { background:white; padding:10px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🎮 Panel de Sedes Activas</h1>
+</header>
+<div class="container">
+  <div class="top">
+    <div class="card">Total Sedes: <span id="total"></span></div>
+    <div class="card">OK: <span id="ok"></span></div>
+    <div class="card">Pendientes: <span id="warn"></span></div>
+    <div class="card">Críticas: <span id="bad"></span></div>
+  </div>
+
+  <table id="tabla">
+    <thead>
+      <tr>
+        <th>Sede</th>
+        <th>Estado</th>
+        <th>Novedad</th>
+        <th>Puntos</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+const sedes = [
+"P.C. El Tesoro","C.C Oviedo","C.C San Diego","C.C Punto Clave","C.C Premium Plaza","C.C Santafé","Av. Poblado","Bolivariana","Suramericana","H. Pablo Tobón Uribe","P.C Florida","P.C Florida 2","C.C Los Molinos 1","C.C Los Molinos 2","C.C Arkadia","Av. Oriental","Sucre","C.C La Central","Envigado 1","Envigado 2","C.C Viva Envigado","C.C Mayorca 1","C.C Mayorca 2","Itagüí 1","C.C Plaza Arrayanes","Bello centro","C.C Puerta del Norte","C.C Estación Niquía","C.C Parque Fabricato","Rionegro 1","Rionegro 2","C.C San Nicolás","C.C San Nicolás 2","C.C Nuestro Urabá","C.C Plaza del rio","C.C Gran Estación","C.C Viva Tunja","C.C Andino","Sede Administrativa Poblado","Sede Administrativa Patio Bonito","Óptica Alma Mater","CC Viva Barranquilla"
+];
+
+const tbody = document.querySelector("tbody");
+
+sedes.forEach(sede => {
+  const tr = document.createElement("tr");
+
+  tr.innerHTML = `
+    <td>${sede}</td>
+    <td>
+      <select onchange="update(this)">
+        <option value="ok">OK</option>
+        <option value="warn">Pendiente</option>
+        <option value="bad">Crítico</option>
+      </select>
+    </td>
+    <td><input type="text" placeholder="Escribir novedad" /></td>
+    <td class="points">10</td>
+  `;
+
+  tbody.appendChild(tr);
+});
+
+function update(el){
+  const tr = el.parentElement.parentElement;
+  tr.classList.remove("ok","warn","bad");
+  tr.classList.add(el.value);
+
+  const pts = tr.querySelector(".points");
+  if(el.value === "ok") pts.innerText = 10;
+  if(el.value === "warn") pts.innerText = 5;
+  if(el.value === "bad") pts.innerText = 0;
+
+  count();
+}
+
+function count(){
+  let ok=0,warn=0,bad=0;
+  document.querySelectorAll("tbody tr").forEach(tr=>{
+    if(tr.classList.contains("ok")) ok++;
+    if(tr.classList.contains("warn")) warn++;
+    if(tr.classList.contains("bad")) bad++;
+  });
+
+  document.getElementById("ok").innerText = ok;
+  document.getElementById("warn").innerText = warn;
+  document.getElementById("bad").innerText = bad;
+}
+
+document.getElementById("total").innerText = sedes.length;
+</script>
+</body>
+</html>
