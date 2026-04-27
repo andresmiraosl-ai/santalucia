@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel tipo Trello - Sedes</title>
+<style>
+body { font-family: Arial; margin:0; background:#f4f6f8; }
+header { background:#1f2937; color:white; padding:15px; text-align:center; }
+
+.board { display:flex; overflow-x:auto; padding:20px; gap:15px; }
+
+.column {
+  background:#e5e7eb;
+  border-radius:10px;
+  width:280px;
+  padding:10px;
+  flex-shrink:0;
+}
+
+.column h3 {
+  margin:0 0 10px;
+  font-size:16px;
+}
+
+.card {
+  background:white;
+  border-radius:8px;
+  padding:10px;
+  margin-bottom:10px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+
+textarea {
+  width:100%;
+  border:none;
+  resize:none;
+  outline:none;
+}
+
+button {
+  margin-top:5px;
+  width:100%;
+  padding:5px;
+  border:none;
+  border-radius:5px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover { background:#1d4ed8; }
+
+.nota {
+  background:#f9fafb;
+  padding:5px;
+  margin-top:5px;
+  border-radius:5px;
+  font-size:13px;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+<h1>🎮 Panel de Sedes - Tipo Trello</h1>
+</header>
+
+<div class="board" id="board"></div>
+
+<script>
+
+const sedes = [
+"P.C. El Tesoro","C.C Oviedo","C.C San Diego","C.C Punto Clave","C.C Premium Plaza","C.C Santafé","Av. Poblado","Bolivariana","Suramericana","H. Pablo Tobón Uribe","P.C Florida","P.C Florida 2","C.C Los Molinos 1","C.C Los Molinos 2","C.C Arkadia","Av. Oriental","Sucre","C.C La Central","Envigado 1","Envigado 2","C.C Viva Envigado","C.C Mayorca 1","C.C Mayorca 2","Itagüí 1","C.C Plaza Arrayanes","Bello centro","C.C Puerta del Norte","C.C Estación Niquía","C.C Parque Fabricato","Rionegro 1","Rionegro 2","C.C San Nicolás","C.C San Nicolás 2","C.C Nuestro Urabá","C.C Plaza del rio","C.C Gran Estación","C.C Viva Tunja","C.C Andino","Sede Administrativa Poblado","Sede Administrativa Patio Bonito","Óptica Alma Mater","CC Viva Barranquilla"
+];
+
+const board = document.getElementById("board");
+
+sedes.forEach((sede, index) => {
+  const column = document.createElement("div");
+  column.className = "column";
+
+  column.innerHTML = `
+    <h3>${sede}</h3>
+    <div id="notes-${index}"></div>
+    <textarea id="input-${index}" placeholder="Escribir novedad..."></textarea>
+    <button onclick="addNote(${index})">Agregar</button>
+  `;
+
+  board.appendChild(column);
+});
+
+function addNote(index) {
+  const input = document.getElementById(`input-${index}`);
+  const notesDiv = document.getElementById(`notes-${index}`);
+
+  if(input.value.trim() === "") return;
+
+  const note = document.createElement("div");
+  note.className = "nota";
+  note.innerText = input.value;
+
+  notesDiv.appendChild(note);
+  input.value = "";
+}
+
+</script>
+
+</body>
+</html>
