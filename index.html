@@ -3,199 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestion de Opticas</title>
-  <meta name="description" content="Tablero de gestion para tickets, tareas, cotizaciones, proveedores e informes de opticas y sedes administrativas.">
+  <title>Gestion Visual de Opticas</title>
+  <meta name="description" content="Panel visual por sedes para registrar novedades, tareas prioritarias, cotizaciones y notas.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand-card">
-        <div class="brand-badge">GO</div>
+  <div class="dashboard-shell">
+    <aside class="rail">
+      <div class="rail-brand">
+        <div class="rail-logo">GO</div>
         <div>
           <p class="eyebrow">Seguimiento diario</p>
-          <h1>Gestion de Opticas</h1>
+          <h1>Gestion Visual</h1>
         </div>
       </div>
 
-      <section class="sidebar-block">
-        <div class="sidebar-heading">
-          <h2>Sedes</h2>
-          <span id="siteCount" class="pill"></span>
-        </div>
-        <label class="search-box">
-          <span>Buscar sede</span>
-          <input id="siteSearch" type="search" placeholder="Ej. Envigado, Barranquilla">
-        </label>
-        <div id="siteList" class="site-list"></div>
+      <nav class="rail-nav">
+        <button class="rail-pill active" type="button">Sedes</button>
+        <button id="exportAllButton" class="rail-pill" type="button">Exportar</button>
+      </nav>
+
+      <section class="side-card">
+        <p class="eyebrow">Resumen</p>
+        <div id="summaryList" class="summary-list"></div>
       </section>
 
-      <section class="sidebar-block tips-card">
-        <h2>Como usarlo</h2>
-        <p>Registra novedades, reparte actividades, controla tiempos y exporta seguimientos por responsable o sede.</p>
+      <section class="side-card">
+        <p class="eyebrow">Enfoque</p>
+        <p class="muted">Cada tarjeta es una sede con foto, historial, tareas prioritarias, cotizaciones y notas en un mismo lugar.</p>
       </section>
     </aside>
 
-    <main class="main-content">
-      <header class="hero">
-        <div>
-          <p class="eyebrow">Centro operativo</p>
-          <h2>Control diario de tickets, tareas e informes</h2>
-          <p class="hero-copy">Un espacio limpio para coordinar solicitudes de opticas, sedes administrativas, proveedores y compromisos del dia.</p>
+    <main class="main-stage">
+      <header class="hero-panel">
+        <div class="hero-copy">
+          <p class="eyebrow">Control de las 42 sedes</p>
+          <h2>Un recuadro por optica, con todo su seguimiento dentro</h2>
+          <p>Identifica cada sede por imagen, registra novedades sobre la marcha y acumula historial en tiempo real sin salir del mismo recuadro.</p>
         </div>
+
         <div class="hero-actions">
-          <button id="seedDataButton" class="ghost-button" type="button">Cargar ejemplo</button>
-          <button id="newTaskButton" class="primary-button" type="button">Nueva actividad</button>
+          <label class="field compact">
+            <span>Buscar sede o texto</span>
+            <input id="searchInput" type="search" placeholder="Envigado, proveedor, pendiente...">
+          </label>
+          <label class="field compact">
+            <span>Tipo</span>
+            <select id="typeFilter"></select>
+          </label>
+          <label class="field compact">
+            <span>Prioridad</span>
+            <select id="priorityFilter"></select>
+          </label>
+          <label class="field compact">
+            <span>Estado</span>
+            <select id="statusFilter"></select>
+          </label>
         </div>
       </header>
 
-      <section class="metrics-grid" id="metricsGrid"></section>
+      <section id="metricsGrid" class="metrics-grid"></section>
 
-      <section class="workspace-grid">
-        <div class="panel filters-panel">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Vista rapida</p>
-              <h3>Filtros de seguimiento</h3>
-            </div>
-            <button id="resetFiltersButton" class="text-button" type="button">Limpiar</button>
-          </div>
-
-          <div class="filter-grid">
-            <label>
-              <span>Buscar</span>
-              <input id="searchInput" type="search" placeholder="Titulo, detalle o responsable">
-            </label>
-            <label>
-              <span>Tipo</span>
-              <select id="typeFilter"></select>
-            </label>
-            <label>
-              <span>Estado</span>
-              <select id="statusFilter"></select>
-            </label>
-            <label>
-              <span>Prioridad</span>
-              <select id="priorityFilter"></select>
-            </label>
-            <label>
-              <span>Responsable</span>
-              <input id="ownerFilter" type="search" placeholder="Nombre del responsable">
-            </label>
-            <label>
-              <span>Sede activa</span>
-              <input id="activeSiteName" type="text" readonly>
-            </label>
-          </div>
-        </div>
-
-        <div class="panel form-panel">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Registro rapido</p>
-              <h3>Crear o actualizar actividad</h3>
-            </div>
-          </div>
-
-          <form id="taskForm" class="task-form">
-            <input id="taskId" type="hidden">
-            <div class="form-grid">
-              <label class="span-2">
-                <span>Titulo</span>
-                <input id="titleInput" type="text" placeholder="Ej. Cotizacion de monturas para Envigado 1" required>
-              </label>
-              <label>
-                <span>Tipo</span>
-                <select id="taskTypeInput" required></select>
-              </label>
-              <label>
-                <span>Sede</span>
-                <select id="siteInput" required></select>
-              </label>
-              <label>
-                <span>Prioridad</span>
-                <select id="priorityInput" required></select>
-              </label>
-              <label>
-                <span>Estado</span>
-                <select id="statusInput" required></select>
-              </label>
-              <label>
-                <span>Responsable</span>
-                <input id="ownerInput" type="text" placeholder="Nombre o cargo">
-              </label>
-              <label>
-                <span>Vence el</span>
-                <input id="dueDateInput" type="date">
-              </label>
-              <label>
-                <span>Tiempo estimado</span>
-                <input id="estimateInput" type="text" placeholder="Ej. 2h, 30 min">
-              </label>
-              <label>
-                <span>Proveedor</span>
-                <input id="vendorInput" type="text" placeholder="Si aplica">
-              </label>
-              <label class="span-2">
-                <span>Etiquetas</span>
-                <input id="tagsInput" type="text" placeholder="Separadas por coma: urgente, inventario, informe">
-              </label>
-              <label class="span-2">
-                <span>Descripcion o seguimiento</span>
-                <textarea id="descriptionInput" rows="4" placeholder="Anota solicitudes, acuerdos, bloqueos, avances o pendientes."></textarea>
-              </label>
-            </div>
-
-            <div class="form-actions">
-              <button class="primary-button" type="submit">Guardar actividad</button>
-              <button id="cancelEditButton" class="ghost-button" type="button">Cancelar edicion</button>
-            </div>
-          </form>
-        </div>
-      </section>
-
-      <section class="content-grid">
-        <div class="panel board-panel">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Tablero</p>
-              <h3>Seguimiento tipo Trello</h3>
-            </div>
-            <button id="exportButton" class="ghost-button" type="button">Exportar CSV</button>
-          </div>
-          <div id="boardColumns" class="board-columns"></div>
-        </div>
-
-        <div class="panel report-panel">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Consolidado</p>
-              <h3>Informe de gestion por sede</h3>
-            </div>
-          </div>
-          <div id="reportList" class="report-list"></div>
-        </div>
-      </section>
-
-      <section class="panel site-panel">
-        <div class="panel-header">
+      <section class="workspace">
+        <div class="workspace-top">
           <div>
-            <p class="eyebrow">Detalle operativo</p>
-            <h3>Sedes desplegables</h3>
+            <p class="eyebrow">Panel de sedes</p>
+            <h3>Tarjetas operativas</h3>
           </div>
+          <button id="loadSamplesButton" class="action-button ghost" type="button">Cargar ejemplos</button>
         </div>
-        <div id="siteAccordion" class="site-accordion"></div>
+
+        <div id="siteGrid" class="site-grid"></div>
       </section>
     </main>
   </div>
 
   <template id="metricTemplate">
     <article class="metric-card">
-      <div>
-        <p class="metric-label"></p>
-        <strong class="metric-value"></strong>
-      </div>
-      <span class="metric-accent"></span>
+      <p class="metric-label"></p>
+      <strong class="metric-value"></strong>
     </article>
   </template>
 
