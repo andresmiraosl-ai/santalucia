@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>OSL Gestión</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+<h1>Óptica Santa Lucía - Gestión</h1>
+<div>Infraestructura</div>
+</header>
+
+<nav>
+<a href="#">Tareas</a>
+<a href="#">Permisos</a>
+<a href="#">Proveedores</a>
+<a href="#">Cotizaciones</a>
+<a href="#">Pagos</a>
+</nav>
+
+<div class="container">
+
+<div class="card">
+<h3>Nueva Tarea</h3>
+<select id="sede">
+<option>Envigado 1</option>
+<option>Oviedo</option>
+<option>Molinos</option>
+</select><br>
+<input id="desc" placeholder="Descripción"><br>
+<select id="estado">
+<option>Pendiente</option>
+<option>En proceso</option>
+<option>Finalizado</option>
+</select><br>
+<button onclick="addTask()">Guardar</button>
+</div>
+
+<div id="tasks"></div>
+
+</div>
+
+<script>
+let db = JSON.parse(localStorage.getItem('osl_db')) || { tareas: [] };
+
+function save(){ localStorage.setItem('osl_db', JSON.stringify(db)); }
+
+function addTask(){
+  const sede = document.getElementById('sede').value;
+  const desc = document.getElementById('desc').value;
+  const estado = document.getElementById('estado').value;
+
+  if(!desc) return;
+
+  db.tareas.push({sede, desc, estado});
+  save();
+  render();
+}
+
+function render(){
+  const cont = document.getElementById('tasks');
+  cont.innerHTML = '';
+
+  db.tareas.forEach((t,i)=>{
+    cont.innerHTML += `
+    <div class="card">
+      <b>${t.sede}</b><br>
+      ${t.desc}<br>
+      Estado: ${t.estado}
+      <button onclick="del(${i})">Eliminar</button>
+    </div>`;
+  });
+}
+
+function del(i){
+  db.tareas.splice(i,1);
+  save();
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
